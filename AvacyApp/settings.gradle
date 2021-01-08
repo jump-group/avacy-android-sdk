@@ -1,0 +1,3 @@
+include ':avacyCMP'
+include ':app'
+rootProject.name = "Avacy App Test"
