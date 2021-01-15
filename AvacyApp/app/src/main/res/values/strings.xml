@@ -2,4 +2,9 @@
     <string name="app_name">Avacy App Test</string>
     <string name="go">VAI</string>
     <string name="enter_url">Inserisci l\'url della pagina</string>
+    <string name="delete_all">Cancella Cookie e Preferenze</string>
+    <string name="view_preferences">Vedi Preferenze</string>
+    <string name="shared_preferences_stored">Preferenze</string>
+    <string name="delete_all_success">Cancellazione effettuata</string>
+    <string name="show_consents">Mostra consensi</string>
 </resources>

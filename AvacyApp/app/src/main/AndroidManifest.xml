@@ -3,7 +3,7 @@
     package="com.posytron.avacyapp">
 
     <application
-        android:name="com.posytron.avacyapp.AvacyTestApplication"
+        android:name=".AvacyTestApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.posytron.avacyapp.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.SharedPreferencesActivity"
+            android:label="@string/shared_preferences_stored" />
     </application>
 
 </manifest>

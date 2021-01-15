@@ -3,8 +3,7 @@ package com.posytron.avacycmp
 import android.content.Context
 import android.webkit.JavascriptInterface
 
-class CMPWebInterface(context: Context) {
-    private val context: Context? = context
+class CMPWebInterface(private val context: Context) {
 
     companion object {
         var TAG: String = "CMPWebInterface"
@@ -21,12 +20,24 @@ class CMPWebInterface(context: Context) {
     }
 
     @JavascriptInterface
-    fun read(value: String?) {
-        AvacyCMP.read(context, value)
+    fun read(key: String?) {
+        AvacyCMP.read(context, key)
+    }
+
+    @JavascriptInterface
+    fun read(key: String?, callback: String?) {
+        val result = AvacyCMP.read(context, key)
+        AvacyCMP.evaluateJavascript("$callback('$result');")
     }
 
     @JavascriptInterface
     fun write(key: String?, value: String?) {
         AvacyCMP.write(context, key, value)
+    }
+
+    @JavascriptInterface
+    fun write(key: String?, value: String?, callback: String?) {
+        val result = AvacyCMP.write(context, key, value)
+        AvacyCMP.evaluateJavascript("$callback('$result');")
     }
 }
