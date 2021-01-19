@@ -3,7 +3,7 @@ package com.posytron.avacycmp
 import android.content.Context
 import android.webkit.JavascriptInterface
 
-class CMPWebInterface(private val context: Context) {
+internal class CMPWebInterface(private val context: Context) {
 
     companion object {
         var TAG: String = "CMPWebInterface"

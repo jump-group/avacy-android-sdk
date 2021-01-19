@@ -19,25 +19,34 @@ object AvacyCMP {
     private var _webView: WebView? = null
     private val _handler = Handler(Looper.getMainLooper())
 
+    @JvmStatic
     fun init(context: Context?, url: String) {
         _sharedPreferencesWrapper = CMPSharedPreferencesWrapper(context!!)
         _url = url
     }
 
+    @JvmStatic
     fun check(context: Context?) {
         check(context, null, null)
     }
 
+    @JvmStatic
     fun check(context: Context?, url: String?) {
         check(context, url, null)
     }
 
+    @JvmStatic
     fun check(context: Context?, listener: OnCMPReady) {
         check(context, "", listener)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
+    @JvmStatic
     fun check(context: Context?, url: String?, listener: OnCMPReady?) {
+        if (_sharedPreferencesWrapper == null) {
+            listener?.onError(context!!.getString(R.string.init_missing))
+            return
+        }
         var urlToLoad = _url
         if (!url.isNullOrEmpty()) {
             urlToLoad = url
@@ -66,7 +75,7 @@ object AvacyCMP {
             override fun onReceivedError(
                 view: WebView?, request: WebResourceRequest?, error: WebResourceError?
             ) {
-                listener?.onError(error)
+                listener?.onError(error?.description.toString())
             }
 
             override fun shouldOverrideUrlLoading(
@@ -78,37 +87,37 @@ object AvacyCMP {
         _webView!!.loadUrl(urlToLoad)
     }
 
-    fun hide() {
+    private fun hide() {
         if (_dialog != null && _dialog!!.isShowing) {
             _dialog!!.hide()
         }
     }
 
-    fun show(context: Context?) {
+    internal fun show(context: Context?) {
         Toast.makeText(context, "Show request", Toast.LENGTH_SHORT).show()
         _handler.post {
             _dialog!!.show()
         }
     }
 
-    fun destroy(context: Context?) {
+    internal fun destroy(context: Context?) {
         _handler.post {
             hide()
         }
         Toast.makeText(context, "Destroy request", Toast.LENGTH_SHORT).show()
     }
 
-    fun read(context: Context?, key: String?): String? {
+    internal fun read(context: Context?, key: String?): String? {
         Toast.makeText(context, "Request to read key $key", Toast.LENGTH_SHORT).show()
         return _sharedPreferencesWrapper!!.getString(key)
     }
 
-    fun write(context: Context?, key: String?, value: String?): String? {
+    internal fun write(context: Context?, key: String?, value: String?): String? {
         Toast.makeText(context, "Request to write $key=$value", Toast.LENGTH_SHORT).show()
         return _sharedPreferencesWrapper!!.saveString(key, value)
     }
 
-    fun evaluateJavascript(script: String) {
+    internal fun evaluateJavascript(script: String) {
         _handler.post {
             _webView!!.evaluateJavascript(
                 "javascript:$script;",
@@ -117,10 +126,12 @@ object AvacyCMP {
         }
     }
 
+    @JvmStatic
     fun showPreferenceCenter(context: Context?) {
         showPreferenceCenter(context, null, null)
     }
 
+    @JvmStatic
     fun showPreferenceCenter(context: Context?, url: String?) {
         var urlToLoad = _url
         if (!url.isNullOrEmpty()) {
@@ -129,16 +140,21 @@ object AvacyCMP {
         showPreferenceCenter(context, "$urlToLoad?prefcenter=1", null);
     }
 
-    fun showPreferenceCenter(context: Context?, url: String?, listener: OnCMPReady?) {
-        var urlToLoad = _url
-        if (!url.isNullOrEmpty()) {
-            urlToLoad = url
+    @JvmStatic
+    fun showPreferenceCenter(context: Context?, baseUrl: String?, listener: OnCMPReady?) {
+        if (_sharedPreferencesWrapper == null) {
+            listener?.onError(context!!.getString(R.string.init_missing))
+            return
         }
-        check(context, "$urlToLoad/?prefcenter=1", listener)
+        var urlToLoad = _url
+        if (!baseUrl.isNullOrEmpty()) {
+            urlToLoad = baseUrl
+        }
+        check(context, "$urlToLoad?prefcenter=1", listener)
         show(context)
     }
 
     interface OnCMPReady {
-        fun onError(error: WebResourceError?)
+        fun onError(error: String?)
     }
 }

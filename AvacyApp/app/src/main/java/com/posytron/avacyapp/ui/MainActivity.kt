@@ -3,7 +3,6 @@ package com.posytron.avacyapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.webkit.CookieManager
-import android.webkit.WebResourceError
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -27,7 +26,8 @@ class MainActivity : AppCompatActivity() {
                 url = "http://" + url
             }
             AvacyCMP.check(this, url, object : AvacyCMP.OnCMPReady {
-                override fun onError(error: WebResourceError?) {
+                override fun onError(error: String?) {
+                    Toast.makeText(this@MainActivity, error, Toast.LENGTH_SHORT).show()
                 }
             })
         }
@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
                 url = "http://" + url
             }
             AvacyCMP.showPreferenceCenter(this, url, object : AvacyCMP.OnCMPReady {
-                override fun onError(error: WebResourceError?) {
+                override fun onError(error: String?) {
+                    Toast.makeText(this@MainActivity, error, Toast.LENGTH_SHORT).show()
                 }
             })
         }
