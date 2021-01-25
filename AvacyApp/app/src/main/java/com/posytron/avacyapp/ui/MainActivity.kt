@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             if (!url.isEmpty() && !url.startsWith("http")) {
                 url = "http://" + url
             }
-            AvacyCMP.check(this, url, object : AvacyCMP.OnCMPReady {
+            AvacyCMP.check(this, url, object : AvacyCMP.OnCMPReady() {
                 override fun onError(error: String?) {
                     Toast.makeText(this@MainActivity, error, Toast.LENGTH_SHORT).show()
                 }
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             if (!url.isEmpty() && !url.startsWith("http")) {
                 url = "http://" + url
             }
-            AvacyCMP.showPreferenceCenter(this, url, object : AvacyCMP.OnCMPReady {
+            AvacyCMP.showPreferenceCenter(this, url, object : AvacyCMP.OnCMPReady() {
                 override fun onError(error: String?) {
                     Toast.makeText(this@MainActivity, error, Toast.LENGTH_SHORT).show()
                 }

@@ -1,4 +1,4 @@
-package com.posytron.avacyapp
+package com.posytron.avacyapp.app
 
 import android.app.Application
 import android.webkit.WebView
@@ -10,7 +10,8 @@ class AvacyTestApplication() : Application() {
         WebView.setWebContentsDebuggingEnabled(true);
         AvacyCMP.init(
             this,
-            "https://www.posytron.com/avacy.html"
+            //"https://avacy-banner-d24ozpfr4.vercel.app/demos/rai-b.html"
+            "https://posytron.com/avacy.html"
         )
     }
 }

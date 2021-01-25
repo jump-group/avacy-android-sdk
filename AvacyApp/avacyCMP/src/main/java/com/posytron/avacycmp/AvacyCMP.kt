@@ -5,11 +5,11 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.WindowManager
 import android.webkit.*
-import android.widget.ProgressBar
 import android.widget.Toast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.posytron.avacycmp.system.CMPSharedPreferencesWrapper
 
 object AvacyCMP {
@@ -56,20 +56,17 @@ object AvacyCMP {
         val lp = WindowManager.LayoutParams()
         val window = _dialog!!.window
         lp.copyFrom(window!!.attributes)
-        lp.width = (context.getResources().getDisplayMetrics().widthPixels * 0.90).toInt()
-        lp.height = (context.getResources().getDisplayMetrics().heightPixels * 0.80).toInt()
+        lp.width = (context.resources.displayMetrics.widthPixels * 0.90).toInt()
         window.attributes = lp
-        val progressBar = _dialog!!.findViewById<ProgressBar>(R.id.progress_bar)
-        _webView = _dialog!!.findViewById<WebView>(R.id.web_view)
+        _webView = _dialog!!.findViewById(R.id.web_view)
         _webView!!.settings.domStorageEnabled = true
         _webView!!.settings.javaScriptEnabled = true
         _webView!!.addJavascriptInterface(CMPWebInterface(context), CMPWebInterface.TAG)
-        progressBar.visibility = View.VISIBLE
         _webView!!.settings.javaScriptCanOpenWindowsAutomatically = true
         _webView!!.webChromeClient = object : WebChromeClient() {}
         _webView!!.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
-                progressBar.visibility = View.GONE
+                listener!!.onSuccess()
             }
 
             override fun onReceivedError(
@@ -84,25 +81,40 @@ object AvacyCMP {
                 return false
             }
         }
+        _webView!!.clearCache(true);
         _webView!!.loadUrl(urlToLoad)
+        _dialog!!.setOnShowListener {
+            if (_webView!!.contentHeight > (context.resources.displayMetrics.heightPixels * 0.80).toInt()) {
+                lp.height = (context.resources.displayMetrics.heightPixels * 0.80).toInt()
+            } else {
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            }
+            window.attributes = lp
+        }
+        _dialog!!.setOnCancelListener {
+            _webView!!.destroy()
+            _webView = null
+        }
     }
 
-    private fun hide() {
+    private fun cancel() {
         if (_dialog != null && _dialog!!.isShowing) {
-            _dialog!!.hide()
+            _dialog!!.cancel()
         }
     }
 
     internal fun show(context: Context?) {
-        Toast.makeText(context, "Show request", Toast.LENGTH_SHORT).show()
-        _handler.post {
-            _dialog!!.show()
+        if (_webView != null) {
+            Toast.makeText(context, "Show request", Toast.LENGTH_SHORT).show()
+            _handler.post {
+                _dialog!!.show()
+            }
         }
     }
 
     internal fun destroy(context: Context?) {
         _handler.post {
-            hide()
+            cancel()
         }
         Toast.makeText(context, "Destroy request", Toast.LENGTH_SHORT).show()
     }
@@ -115,6 +127,23 @@ object AvacyCMP {
     internal fun write(context: Context?, key: String?, value: String?): String? {
         Toast.makeText(context, "Request to write $key=$value", Toast.LENGTH_SHORT).show()
         return _sharedPreferencesWrapper!!.saveString(key, value)
+    }
+
+    fun readAll(context: Context): String {
+        Toast.makeText(context, "Request to read all", Toast.LENGTH_SHORT).show()
+        val sharedPreferencesStored = _sharedPreferencesWrapper!!.getAll();
+        return Gson().toJson(sharedPreferencesStored)
+    }
+
+    internal fun writeAll(context: Context?, jsonString: String?): String? {
+        Toast.makeText(context, "Request to write $jsonString", Toast.LENGTH_SHORT).show()
+        val map: Map<String, Any> = Gson().fromJson(
+            jsonString, object : TypeToken<HashMap<String?, Any?>?>() {}.type
+        )
+        for ((key, value) in map.entries) {
+            _sharedPreferencesWrapper!!.saveString(key, value.toString())
+        }
+        return Gson().toJson(map)
     }
 
     internal fun evaluateJavascript(script: String) {
@@ -150,11 +179,19 @@ object AvacyCMP {
         if (!baseUrl.isNullOrEmpty()) {
             urlToLoad = baseUrl
         }
-        check(context, "$urlToLoad?prefcenter=1", listener)
-        show(context)
+        check(context, "$urlToLoad?prefcenter=1", object : OnCMPReady() {
+            override fun onSuccess() {
+                show(context)
+            }
+
+            override fun onError(error: String?) {
+                listener?.onError(error)
+            }
+        })
     }
 
-    interface OnCMPReady {
-        fun onError(error: String?)
+    abstract class OnCMPReady {
+        open fun onSuccess() {}
+        abstract fun onError(error: String?)
     }
 }

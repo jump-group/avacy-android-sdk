@@ -3,7 +3,7 @@
     package="com.posytron.avacyapp">
 
     <application
-        android:name=".AvacyTestApplication"
+        android:name=".app.AvacyTestApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
