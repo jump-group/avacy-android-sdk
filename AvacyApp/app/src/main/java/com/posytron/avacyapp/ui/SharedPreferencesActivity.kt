@@ -33,7 +33,7 @@ class SharedPreferencesActivity : AppCompatActivity() {
         for ((key, value) in sharedPreferencesStored!!.entries) {
             sharedPreferenceItems.add(SharedPreferenceItem(key, value))
         }
-        recyclerView.adapter = SharedPreferencesAdapter(this, sharedPreferenceItems)
+        recyclerView.adapter = SharedPreferencesAdapter(sharedPreferenceItems)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

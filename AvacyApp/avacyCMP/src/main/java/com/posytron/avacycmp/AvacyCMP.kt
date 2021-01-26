@@ -8,9 +8,10 @@ import android.os.Looper
 import android.view.WindowManager
 import android.webkit.*
 import android.widget.Toast
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.posytron.avacycmp.system.CMPSharedPreferencesWrapper
+import com.posytron.avacycmp.utils.JsonUtils
+import org.json.JSONObject
+
 
 object AvacyCMP {
     private var _url: String = ""
@@ -70,9 +71,12 @@ object AvacyCMP {
             }
 
             override fun onReceivedError(
-                view: WebView?, request: WebResourceRequest?, error: WebResourceError?
+                view: WebView?,
+                errorCode: Int,
+                description: String?,
+                failingUrl: String?
             ) {
-                listener?.onError(error?.description.toString())
+                listener?.onError(description)
             }
 
             override fun shouldOverrideUrlLoading(
@@ -129,21 +133,21 @@ object AvacyCMP {
         return _sharedPreferencesWrapper!!.saveString(key, value)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun readAll(context: Context): String {
         Toast.makeText(context, "Request to read all", Toast.LENGTH_SHORT).show()
-        val sharedPreferencesStored = _sharedPreferencesWrapper!!.getAll();
-        return Gson().toJson(sharedPreferencesStored)
+        val sharedPreferencesStored = _sharedPreferencesWrapper!!.getAll()
+        return JsonUtils.mapToJson(sharedPreferencesStored as MutableMap<String?, Any>).toString()
     }
 
+    @Suppress("UNCHECKED_CAST")
     internal fun writeAll(context: Context?, jsonString: String?): String? {
         Toast.makeText(context, "Request to write $jsonString", Toast.LENGTH_SHORT).show()
-        val map: Map<String, Any> = Gson().fromJson(
-            jsonString, object : TypeToken<HashMap<String?, Any?>?>() {}.type
-        )
+        val map = JsonUtils.jsonToMap(JSONObject(jsonString!!))
         for ((key, value) in map.entries) {
             _sharedPreferencesWrapper!!.saveString(key, value.toString())
         }
-        return Gson().toJson(map)
+        return JsonUtils.mapToJson(map as MutableMap<String?, Any>).toString()
     }
 
     internal fun evaluateJavascript(script: String) {

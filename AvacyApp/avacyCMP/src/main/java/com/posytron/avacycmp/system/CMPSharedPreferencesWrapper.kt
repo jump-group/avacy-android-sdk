@@ -31,14 +31,16 @@ class CMPSharedPreferencesWrapper(context: Context) {
         sharedPreferences!!.edit().remove(key).apply()
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getAll(): MutableMap<String, String>? {
         return sharedPreferences!!.all as MutableMap<String, String>?
     }
 
     fun removeAll() {
         val all = getAll()
-        for ((key, value) in all!!) {
+        for ((key, _) in all!!) {
             remove(key)
         }
     }
+
 }

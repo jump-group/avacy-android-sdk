@@ -7,4 +7,6 @@
     <string name="shared_preferences_stored">Preferenze</string>
     <string name="delete_all_success">Cancellazione effettuata</string>
     <string name="show_consents">Mostra consensi</string>
+    <string name="base_url">https://posytron.com/avacy.html</string>
+    <!--<string name="base_url">https://avacy-banner-d24ozpfr4.vercel.app/demos/rai-b.html</string>-->
 </resources>

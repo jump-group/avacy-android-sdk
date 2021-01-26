@@ -10,7 +10,6 @@ import com.posytron.avacyapp.R
 import com.posytron.avacyapp.models.SharedPreferenceItem
 
 class SharedPreferencesAdapter(
-    context: Context?,
     var sharedPreferences: ArrayList<SharedPreferenceItem>?
 ) :
     RecyclerView.Adapter<SharedPreferencesAdapter.SharedPreferenceViewHolder>() {
