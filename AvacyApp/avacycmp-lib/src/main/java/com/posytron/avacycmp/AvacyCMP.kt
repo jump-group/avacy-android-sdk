@@ -183,15 +183,7 @@ object AvacyCMP {
         if (!baseUrl.isNullOrEmpty()) {
             urlToLoad = baseUrl
         }
-        check(context, "$urlToLoad?prefcenter=1", object : OnCMPReady() {
-            override fun onSuccess() {
-                show(context)
-            }
-
-            override fun onError(error: String?) {
-                listener?.onError(error)
-            }
-        })
+        check(context, "$urlToLoad?prefcenter=1", listener)
     }
 
     abstract class OnCMPReady {
