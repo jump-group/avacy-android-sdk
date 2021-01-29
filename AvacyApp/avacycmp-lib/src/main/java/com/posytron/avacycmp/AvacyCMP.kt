@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.webkit.*
-import android.widget.Toast
 import com.posytron.avacycmp.system.CMPSharedPreferencesWrapper
 import com.posytron.avacycmp.utils.JsonUtils
 import org.json.JSONObject
@@ -43,7 +42,7 @@ object AvacyCMP {
 
     @SuppressLint("SetJavaScriptEnabled")
     @JvmStatic
-    fun check(context: Context?, url: String?, listener: OnCMPReady?) {
+    internal fun check(context: Context?, url: String?, listener: OnCMPReady?) {
         if (_sharedPreferencesWrapper == null) {
             listener?.onError(context!!.getString(R.string.init_missing))
             return
@@ -107,42 +106,36 @@ object AvacyCMP {
         }
     }
 
-    internal fun show(context: Context?) {
+    internal fun show() {
         if (_webView != null) {
-            Toast.makeText(context, "Show request", Toast.LENGTH_SHORT).show()
             _handler.post {
                 _dialog!!.show()
             }
         }
     }
 
-    internal fun destroy(context: Context?) {
+    internal fun destroy() {
         _handler.post {
             cancel()
         }
-        Toast.makeText(context, "Destroy request", Toast.LENGTH_SHORT).show()
     }
 
-    internal fun read(context: Context?, key: String?): String? {
-        Toast.makeText(context, "Request to read key $key", Toast.LENGTH_SHORT).show()
+    internal fun read(key: String?): String? {
         return _sharedPreferencesWrapper!!.getString(key)
     }
 
-    internal fun write(context: Context?, key: String?, value: String?): String? {
-        Toast.makeText(context, "Request to write $key=$value", Toast.LENGTH_SHORT).show()
+    internal fun write(key: String?, value: String?): String? {
         return _sharedPreferencesWrapper!!.saveString(key, value)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun readAll(context: Context): String {
-        Toast.makeText(context, "Request to read all", Toast.LENGTH_SHORT).show()
+    fun readAll(): String {
         val sharedPreferencesStored = _sharedPreferencesWrapper!!.getAll()
         return JsonUtils.mapToJson(sharedPreferencesStored as MutableMap<String?, Any>).toString()
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun writeAll(context: Context?, jsonString: String?): String? {
-        Toast.makeText(context, "Request to write $jsonString", Toast.LENGTH_SHORT).show()
+    internal fun writeAll(jsonString: String?): String? {
         val map = JsonUtils.jsonToMap(JSONObject(jsonString!!))
         for ((key, value) in map.entries) {
             _sharedPreferencesWrapper!!.saveString(key, value.toString())
@@ -161,28 +154,16 @@ object AvacyCMP {
 
     @JvmStatic
     fun showPreferenceCenter(context: Context?) {
-        showPreferenceCenter(context, null, null)
+        showPreferenceCenter(context, null)
     }
 
     @JvmStatic
-    fun showPreferenceCenter(context: Context?, url: String?) {
-        var urlToLoad = _url
-        if (!url.isNullOrEmpty()) {
-            urlToLoad = url
-        }
-        showPreferenceCenter(context, "$urlToLoad?prefcenter=1", null);
-    }
-
-    @JvmStatic
-    fun showPreferenceCenter(context: Context?, baseUrl: String?, listener: OnCMPReady?) {
+    fun showPreferenceCenter(context: Context?, listener: OnCMPReady?) {
         if (_sharedPreferencesWrapper == null) {
             listener?.onError(context!!.getString(R.string.init_missing))
             return
         }
         var urlToLoad = _url
-        if (!baseUrl.isNullOrEmpty()) {
-            urlToLoad = baseUrl
-        }
         check(context, "$urlToLoad?prefcenter=1", listener)
     }
 

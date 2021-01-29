@@ -35,6 +35,8 @@ dependencies {
 ```
 Add the line above, which instruct Gradle to pull in the latest version of the SDK.
 
+If not already there, add also the Kotlin dependency.
+
 ```
 dependencies {
     ...
@@ -42,7 +44,6 @@ dependencies {
     ...
 }
 ```
-If not already there, add also the Kotlin dependency.
 
 Once that's done, save the file and perform a Gradle sync.
 
@@ -71,17 +72,37 @@ AvacyCMP.init(
 **Check for consent**
 
 Add the following for check if consent has already been given to the latest version of the privacy policy, if not, show the consent banner.  
-Note: context must necessarily be a UI context.
+Note: context must necessarily be a UI context
 
 ```
 AvacyCMP.check(context)
 ```
 
+Or use the following for catch any errors during loading
+
+```
+AvacyCMP.check(context, object : AvacyCMP.OnCMPReady() {
+	override fun onError(error: String?) {
+		...
+	}
+})
+```
+
 **Show Preference Center**
 
 Add the following for show the Preference Center to edit current consents.  
-Note: context must necessarily be a UI context.
+Note: context must necessarily be a UI context
 
 ```
 AvacyCMP.showPreferenceCenter(context)
+```
+
+or
+
+```
+AvacyCMP.check(context, object : AvacyCMP.OnCMPReady() {
+	override fun onError(error: String?) {
+		...
+	}
+})
 ```

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Avacy App Test</string>
+    <string name="app_name">Avacy App Sample</string>
     <string name="go">VAI</string>
     <string name="enter_url">Inserisci l\'url della pagina</string>
     <string name="delete_all">Cancella Cookie e Preferenze</string>

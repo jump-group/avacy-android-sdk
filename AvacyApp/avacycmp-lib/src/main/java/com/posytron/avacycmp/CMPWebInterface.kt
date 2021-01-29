@@ -11,55 +11,55 @@ internal class CMPWebInterface(private val context: Context) {
 
     @JavascriptInterface
     fun show() {
-        AvacyCMP.show(context)
+        AvacyCMP.show()
     }
 
     @JavascriptInterface
     fun destroy() {
-        AvacyCMP.destroy(context)
+        AvacyCMP.destroy()
     }
 
     @JavascriptInterface
     fun read(key: String?) {
-        AvacyCMP.read(context, key)
+        AvacyCMP.read(key)
     }
 
     @JavascriptInterface
     fun read(key: String?, callback: String?) {
-        val result = AvacyCMP.read(context, key)
+        val result = AvacyCMP.read(key)
         AvacyCMP.evaluateJavascript("$callback('$result');")
     }
 
     @JavascriptInterface
     fun write(key: String?, value: String?) {
-        AvacyCMP.write(context, key, value)
+        AvacyCMP.write(key, value)
     }
 
     @JavascriptInterface
     fun write(key: String?, value: String?, callback: String?) {
-        val result = AvacyCMP.write(context, key, value)
+        val result = AvacyCMP.write(key, value)
         AvacyCMP.evaluateJavascript("$callback('$result');")
     }
 
     @JavascriptInterface
     fun readAll() {
-        AvacyCMP.readAll(context)
+        AvacyCMP.readAll()
     }
 
     @JavascriptInterface
     fun readAll(callback: String?) {
-        val result = AvacyCMP.readAll(context)
+        val result = AvacyCMP.readAll()
         AvacyCMP.evaluateJavascript("$callback('$result');")
     }
 
     @JavascriptInterface
     fun writeAll(jsonString: String?) {
-        AvacyCMP.writeAll(context, jsonString)
+        AvacyCMP.writeAll(jsonString)
     }
 
     @JavascriptInterface
     fun writeAll(jsonString: String?, callback: String?) {
-        val result = AvacyCMP.writeAll(context, jsonString)
+        val result = AvacyCMP.writeAll(jsonString)
         AvacyCMP.evaluateJavascript("$callback('$result');")
     }
 }
