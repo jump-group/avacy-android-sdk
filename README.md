@@ -10,14 +10,14 @@ Avacy CMP is the Android library for the Smart Consent Solution provided by Avac
 
 ## Import the SDK
 
-Apps can import the SDK with a Gradle dependency that points to JCenter repository.  
-First, make sure that jcenter() is referenced in the allprojects section of your project-level build.gradle file.
+Apps can import the SDK with a Gradle dependency that points to jitpack repository.  
+First, make sure that jitpack is referenced in the allprojects section of your project-level build.gradle file.
 
 ```
 allprojects {
     repositories {
 		...
-		jcenter()
+		maven { url "https://jitpack.io" }
 		...
 	}
 }
@@ -29,7 +29,7 @@ Next, open the app-level build.gradle file for your app, and look for a "depende
 ```
 dependencies {
 	...
-	implementation 'com.posytron.avacycmp:avacycmp-lib:1.0.0'
+	implementation 'com.github.posytronsdk:avacy-sdk:1.0.0'
 	...
 }
 ```
