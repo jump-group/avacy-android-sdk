@@ -53,6 +53,7 @@ object AvacyCMP {
         }
         _dialog = Dialog(context!!, R.style.dialog_style)
         _dialog!!.setContentView(R.layout.cmp_dialog)
+        _dialog!!.setCancelable(false);
         val lp = WindowManager.LayoutParams()
         val window = _dialog!!.window
         lp.copyFrom(window!!.attributes)
