@@ -67,7 +67,7 @@ object AvacyCMP {
         _webView!!.webChromeClient = object : WebChromeClient() {}
         _webView!!.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
-                listener!!.onSuccess()
+                listener?.onSuccess()
             }
 
             override fun onReceivedError(
