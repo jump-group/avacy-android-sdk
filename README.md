@@ -29,7 +29,7 @@ Next, open the app-level build.gradle file for your app, and look for a "depende
 ```
 dependencies {
 	...
-	implementation 'com.github.jump-group:avacy-android-sdk:master-SNAPSHOT'
+    implementation 'com.github.jump-group:avacy-android-sdk:1.0.0'
 	...
 }
 ```
